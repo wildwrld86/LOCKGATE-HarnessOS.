@@ -13,7 +13,7 @@ Never commit secrets or private traces. Policy changes need human review.
   host and redirect controls, pinned public IP connections, bounded response,
   hashed snapshots, independent tests, and one real page smoke run.
   Scope: retrieval module, CLI/config, tests, CI, docs; no H0 policy loosening.
-- H2-001 — ChatGPT — completed (CI pending): independently check trusted exact source-text
+- H2-001 — ChatGPT — completed: independently check trusted exact source-text
   claims against a fresh E1 snapshot; report unknown and contradiction states,
   retain text citation offsets and hashes, and deny E2 completion otherwise.
   Scope: verifier, trusted claim contract, tests, CI, and documentation.
@@ -52,7 +52,10 @@ Never commit secrets or private traces. Policy changes need human review.
   verifier, freshness and hash checks, visible text/citation offsets, explicit
   contradiction and unknown statuses, and a failing CI gate unless all claims
   are supported. Twenty-two deterministic tests pass. A previous live E1
-  artifact also passed both configured quotes locally; fresh CI is pending.
+  artifact also passed both configured quotes locally. Fresh GitHub Actions
+  run 39516195231 passed both jobs. Its E2 artifact's two quote offsets and
+  hashes were independently recomputed against the saved visible text and
+  source snapshot (SHA-256 `779c708ffc32f201ed24aa1fa0e2b1cd2c89f95e745fbe1515451039d6b61fc1`).
   This is exact text support only, not semantic or applicant verification.
 - Next unclaimed task H3-001: define a narrow applicant profile and independent
   eligibility decision protocol with an explicit `unknown` outcome. Do not
