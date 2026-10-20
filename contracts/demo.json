@@ -1,0 +1,10 @@
+{
+  "task_id": "LS-DEMO-001",
+  "goal": "Read the example opportunity and submit one evidence-grounded candidate. This is a synthetic fixture, not a live or verified grant.",
+  "allowed_tools": ["list_records", "read_record"],
+  "max_steps": 6,
+  "max_repeated_action": 2,
+  "max_evidence_age_seconds": 300,
+  "required_output_fields": ["record_id", "title", "source_url", "recommendation"],
+  "exact_match_fields": ["record_id", "title", "source_url"]
+}

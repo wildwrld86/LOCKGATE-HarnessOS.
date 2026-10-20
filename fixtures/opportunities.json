@@ -1,0 +1,13 @@
+{
+  "notice": "SYNTHETIC TEST DATA — NOT A REAL OPPORTUNITY OR OFFICIAL VERIFICATION",
+  "records": [
+    {
+      "record_id": "demo-001",
+      "title": "Synthetic Example Credit",
+      "source_url": "https://example.org/fictional-credit",
+      "eligibility": "Fictional sole proprietors",
+      "deadline": "N/A; synthetic fixture",
+      "notes": "Test only. Never use for a funding application."
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+name: Lockgate contract and regression checks
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Harness regression suite
+        run: python -m unittest discover -s tests -v
+      - name: Demonstrate permitted evidence-backed run
+        run: python -m lockgate.cli --mode demo --db runtime/traces.sqlite3 > runtime-summary.json
+      - name: Upload local demo audit trail
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lockgate-demo-trace
+          path: |
+            runtime-summary.json
+            runtime/traces.sqlite3
+          if-no-files-found: ignore
+          retention-days: 7
