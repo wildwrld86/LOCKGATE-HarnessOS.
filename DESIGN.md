@@ -44,10 +44,12 @@ USER GOAL -> CONTRACT (trusted host configuration)
 |---|---|---|
 | E0 synthetic | A fixture observed through an allowed tool and referenced by a valid receipt | Yes |
 | E1 retrieved | A live page fetched through controlled egress and snapshotted | Yes, trusted-host CLI; not wired into H0 output gate |
-| E2 checked | A deterministic or independent verification step comparing claims to current primary sources | No |
+| E2 checked | Trusted exact text checked against a fresh, hash-validated primary-source snapshot; contradiction templates and citation offsets retained | Yes, in separate H2 CLI/CI gate; not semantic or applicant-level verification |
 | E3 authorized | Sensitive external write, identity proof, or human approval as required | No |
 
 Output gating should encode a task-specific minimum. H0 only demonstrates E0; it cannot support a production claim of eligibility or grant availability.
+The H2 CLI requires all configured text checks to pass for E2. It does not
+promote the H0 fixture output or make a claim about any applicant's eligibility.
 
 ## Proposed Leverage Seeker task contract (v1)
 

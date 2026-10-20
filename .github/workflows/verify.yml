@@ -42,13 +42,16 @@ jobs:
           python-version: '3.11'
       - name: Retrieve one official page (E1 only)
         run: python -m lockgate.retrieval_cli --output-dir runtime/snapshots > retrieval-summary.json
-      - name: Upload official-page snapshot and manifest
+      - name: Check trusted claims against snapshot (E2 gate)
+        run: python -m lockgate.verification_cli --retrieval-summary retrieval-summary.json > verification-summary.json
+      - name: Upload official-page snapshot, manifest, and E2 citations
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: lockgate-e1-retrieval
           path: |
             retrieval-summary.json
+            verification-summary.json
             runtime/snapshots/
           if-no-files-found: ignore
           retention-days: 7

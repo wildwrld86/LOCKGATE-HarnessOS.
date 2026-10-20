@@ -80,6 +80,33 @@ push and publishes the `lockgate-e1-retrieval` artifact. The deterministic tests
 do not depend on that external page.
 The response cap is 2 MiB; larger pages are rejected rather than truncated.
 
+## H2: exact source-text checks
+
+The trusted host contract `contracts/claims.json` defines two exact excerpts
+about AWS account credits. After H1 writes `retrieval-summary.json`, run:
+
+```bash
+python -m lockgate.verification_cli --retrieval-summary retrieval-summary.json
+```
+
+H2 first checks the E1 source URL, timestamp, byte count, and SHA-256. It then
+extracts visible HTML text without executing scripts, normalizes whitespace,
+and looks for each configured excerpt and explicit contradiction excerpt. Its
+report records the source hash, visible-text hash, quote hash, and character
+offsets into the saved `.visible.txt` file. The CLI succeeds only if **every**
+trusted excerpt is present and none of its configured contradictions is present;
+unknown, contradicted, or conflicting claims return exit code 2 and require
+review. The live GitHub Actions job applies this gate after retrieval and
+includes the E2 report and text in its downloadable artifact.
+
+**E2_SOURCE_TEXT_MATCH proves only that these exact words appear in the
+approved source snapshot.** It does not infer the eligibility of a particular
+founder, detect every possible contradiction, establish that provider terms
+remain unchanged, or validate an arbitrary model-written paraphrase. An
+untrusted planner cannot edit the host claim contract or promote E1 to E2;
+the H0 synthetic demo remains a separate E0 workflow. The report and hashes
+are an audit trail, not a cryptographic signature against a compromised host.
+
 **E1_RETRIEVED_ONLY means the page was fetched.** Its contents are untrusted
 data, and this stage makes no eligibility, deadline, availability, or applicant
 claim. It is separate from the H0 planner and cannot authorize new tools.

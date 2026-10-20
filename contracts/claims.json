@@ -1,0 +1,20 @@
+{
+  "source_url": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-plans.html",
+  "max_age_seconds": 86400,
+  "claims": [
+    {
+      "id": "aws-new-account-credit",
+      "source_text": "If you are new to AWS, you receive USD $100 in credits after you create an account regardless of your account plan.",
+      "contradiction_texts": [
+        "If you are new to AWS, you receive no credits after you create an account."
+      ]
+    },
+    {
+      "id": "aws-additional-activity-credit",
+      "source_text": "You can also earn up to an additional USD $100 in credits by completing activities.",
+      "contradiction_texts": [
+        "You cannot earn any additional credits by completing activities."
+      ]
+    }
+  ]
+}
