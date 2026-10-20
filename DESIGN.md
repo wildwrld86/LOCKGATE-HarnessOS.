@@ -43,7 +43,7 @@ USER GOAL -> CONTRACT (trusted host configuration)
 | Level | Definition | Available in H0? |
 |---|---|---|
 | E0 synthetic | A fixture observed through an allowed tool and referenced by a valid receipt | Yes |
-| E1 retrieved | A live page fetched through controlled egress and snapshotted | No |
+| E1 retrieved | A live page fetched through controlled egress and snapshotted | Yes, trusted-host CLI; not wired into H0 output gate |
 | E2 checked | A deterministic or independent verification step comparing claims to current primary sources | No |
 | E3 authorized | Sensitive external write, identity proof, or human approval as required | No |
 

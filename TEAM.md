@@ -9,6 +9,10 @@ Never commit secrets or private traces. Policy changes need human review.
 - H0-001 — ChatGPT — completed: import and verify H0, isolate planner observation
   copies from authoritative evidence, add a regression, and publish the baseline.
   Scope: starter files, tests, CI, and project documentation.
+- H1-001 — ChatGPT — completed (live CI pending): implement read-only official-page retrieval with
+  host and redirect controls, pinned public IP connections, bounded response,
+  hashed snapshots, independent tests, and one real page smoke run.
+  Scope: retrieval module, CLI/config, tests, CI, docs; no H0 policy loosening.
 
 ## Notes
 
@@ -26,3 +30,15 @@ Never commit secrets or private traces. Policy changes need human review.
   bounded response size/time, snapshot hashes, and explicit retrieved-only proof.
   Test denied hosts, redirects, private addresses, and oversized responses before
   using a real cloud-credit page. Retrieval alone must not imply eligibility.
+- 2026-10-20 H1 handoff: Added trusted-host CLI for one official page, exact
+  hostname and redirect policy, public-IP DNS validation, pinned TLS connection,
+  size/time checks, SHA-256 snapshot and E1-only manifest. The planner has no
+  network authority. Fifteen local tests pass, including injected private DNS,
+  hostile redirects, forged evidence and oversized bodies. Local external DNS
+  was unavailable, so the live official-page smoke job must be checked in CI.
+  DNS lookup itself has no portable Python stdlib timeout, and this stage picks
+  only one vetted address. No eligibility claims are extracted or verified.
+- Next unclaimed task H2-001: independently compare an explicit small set of
+  claims against primary-source snapshots; report unknowns and contradictions,
+  retain citation offsets/hashes, and make acceptance require E2 checks. Keep
+  application and other side effects out of scope.

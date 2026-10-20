@@ -1,0 +1,6 @@
+{
+  "allowed_hosts": ["cloud.google.com"],
+  "max_redirects": 3,
+  "max_bytes": 1048576,
+  "timeout_seconds": 15
+}

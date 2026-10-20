@@ -50,11 +50,41 @@ Never commit secrets. In GitHub Actions use repository secrets for protected val
 ## Run it on GitHub
 
 Every push and pull request runs `.github/workflows/verify.yml` using Python 3.11.
-Open **Actions → Lockgate contract and regression checks** to see the seven tests
+Open **Actions → Lockgate contract and regression checks** to see the tests
 and the demo run. A successful run includes a **lockgate-demo-trace** artifact
 containing the JSON summary and SQLite audit log, retained for seven days.
 No API key is required. Groq inference is optional and is not exercised by CI.
 Read `TEAM.md` before contributing.
+
+## H1: one official-page snapshot
+
+Run the trusted-host fetcher with no API key:
+
+```bash
+python -m lockgate.retrieval_cli
+```
+
+The initial policy in `contracts/retrieval.json` allows only the
+`cloud.google.com` hostname; the default requested page is
+`https://cloud.google.com/startup/pre-funded`. Its
+configured hostname is an exact match; it rejects HTTP, other hosts, ports,
+credentials, URL queries, fragments, non-public DNS answers, unexpected content
+types, compression, oversized responses, and redirect loops. TLS still verifies
+the allowed hostname although the connection uses a vetted resolved address.
+The response bytes are stored under `runtime/snapshots/` with SHA-256 naming and
+a separate JSON manifest containing the final URL, redirect chain, resolved IP,
+timestamp, response type, and hash. CI attempts one read-only live retrieval on
+push and publishes the `lockgate-e1-retrieval` artifact. The deterministic tests
+do not depend on that external page.
+
+**E1_RETRIEVED_ONLY means the page was fetched.** Its contents are untrusted
+data, and this stage makes no eligibility, deadline, availability, or applicant
+claim. It is separate from the H0 planner and cannot authorize new tools.
+Network connect/read time and response size are bounded, but DNS lookup has no
+portable timeout in the Python standard library; address-level connection
+failures can also prevent this first single-address prototype from reaching a
+healthy alternate address. Treat live CI failures as retrieval failures, not as
+evidence that a credit has disappeared.
 
 ## Trust limits / explicit non-features
 
