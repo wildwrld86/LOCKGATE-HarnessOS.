@@ -66,9 +66,9 @@ python -m lockgate.retrieval_cli
 
 The initial policy in `contracts/retrieval.json` allows only the
 `docs.aws.amazon.com` hostname; the default requested page is
-`https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-FAQ.html`.
+`https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-plans.html`.
 The first Google startup-program page exceeded the bounded response cap, so
-the smoke test uses an official AWS Free Tier credit FAQ as its E1 source. Its
+the smoke test uses an official AWS plan and credit page as its E1 source. Its
 configured hostname is an exact match; it rejects HTTP, other hosts, ports,
 credentials, URL queries, fragments, non-public DNS answers, unexpected content
 types, compression, oversized responses, and redirect loops. TLS still verifies
