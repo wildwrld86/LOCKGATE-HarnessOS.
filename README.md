@@ -76,6 +76,7 @@ a separate JSON manifest containing the final URL, redirect chain, resolved IP,
 timestamp, response type, and hash. CI attempts one read-only live retrieval on
 push and publishes the `lockgate-e1-retrieval` artifact. The deterministic tests
 do not depend on that external page.
+The response cap is 2 MiB; larger pages are rejected rather than truncated.
 
 **E1_RETRIEVED_ONLY means the page was fetched.** Its contents are untrusted
 data, and this stage makes no eligibility, deadline, availability, or applicant
