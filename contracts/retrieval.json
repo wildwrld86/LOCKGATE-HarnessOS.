@@ -1,5 +1,5 @@
 {
-  "allowed_hosts": ["cloud.google.com"],
+  "allowed_hosts": ["docs.aws.amazon.com"],
   "max_redirects": 3,
   "max_bytes": 2097152,
   "timeout_seconds": 15

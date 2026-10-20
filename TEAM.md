@@ -38,6 +38,9 @@ Never commit secrets or private traces. Policy changes need human review.
   was unavailable, so the live official-page smoke job must be checked in CI.
   DNS lookup itself has no portable Python stdlib timeout, and this stage picks
   only one vetted address. No eligibility claims are extracted or verified.
+- Live smoke attempts against the Google pre-funded page were rejected at both
+  1 MiB and 2 MiB. The policy cap remains 2 MiB; smoke source changed to the
+  official AWS Free Tier credit FAQ. No rejected page became an E1 receipt.
 - Next unclaimed task H2-001: independently compare an explicit small set of
   claims against primary-source snapshots; report unknowns and contradictions,
   retain citation offsets/hashes, and make acceptance require E2 checks. Keep

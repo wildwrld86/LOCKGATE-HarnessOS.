@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parent.parent
 
 def main() -> int:
     parser = argparse.ArgumentParser(description='LOCKGATE H1 official-page snapshot')
-    parser.add_argument('--url', default='https://cloud.google.com/startup/pre-funded')
+    parser.add_argument('--url', default='https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-FAQ.html')
     parser.add_argument('--policy', default=str(ROOT / 'contracts/retrieval.json'))
     parser.add_argument('--output-dir', default='runtime/snapshots')
     args = parser.parse_args()
