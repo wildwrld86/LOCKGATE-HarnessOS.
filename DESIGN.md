@@ -58,6 +58,14 @@ UNKNOWN. All H3 results retain `full_eligibility: NOT_ASSESSED` and grant no
 action authority. H3 is a milestone name and does not imply E3 authorization.
 The current build direction and deferred capabilities are in `ROADMAP.md`.
 
+H4 wraps H3 with a proposal-only adapter: one final JSON response, no registered
+tools, and a 16 KiB response cap. Host-owned task facts determine the independent
+outcome even if the planner withholds facts. The proposal gate validates that
+its receipts and stated decision agree with that outcome. An accepted report
+is not permission to act. Offline seeded replays explicitly stay at E0; trusted
+host replay mode must be enabled to consume synthetic source manifests, and
+normal source verification rejects them. Adapter Python code remains trusted.
+
 ## Proposed Leverage Seeker task contract (v1)
 
 ```json

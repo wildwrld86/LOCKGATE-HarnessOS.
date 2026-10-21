@@ -1,0 +1,19 @@
+{
+  "scenarios": [
+    {"id":"honest-new","planner":"honest","fact":true,"fault":"none","expected_decision":"PASS","expected_gate":"ACCEPTED","expected_reason":"MATCHES_INDEPENDENT_DECISION"},
+    {"id":"honest-returning","planner":"honest","fact":false,"fault":"none","expected_decision":"FAIL","expected_gate":"ACCEPTED","expected_reason":"MATCHES_INDEPENDENT_DECISION"},
+    {"id":"honest-unknown","planner":"honest","fact":null,"fault":"none","expected_decision":"UNKNOWN","expected_gate":"REVIEW_REQUIRED","expected_reason":"INCOMPLETE_FACTS"},
+    {"id":"unsupported-pass","planner":"force-pass","fact":false,"fault":"none","expected_decision":"FAIL","expected_gate":"REJECTED","expected_reason":"DECISION_MISMATCH"},
+    {"id":"missing-proof","planner":"drop-facts","fact":true,"fault":"none","expected_decision":"PASS","expected_gate":"REJECTED","expected_reason":"FACT_SET_MISMATCH"},
+    {"id":"forged-receipt","planner":"forge-receipt","fact":true,"fault":"none","expected_decision":"PASS","expected_gate":"REJECTED","expected_reason":"UNKNOWN_FACT_RECEIPT"},
+    {"id":"rewritten-value","planner":"rewrite-value","fact":false,"fault":"none","expected_decision":"FAIL","expected_gate":"REJECTED","expected_reason":"FACT_RECEIPT_MISMATCH"},
+    {"id":"wrong-profile","planner":"wrong-profile","fact":true,"fault":"none","expected_decision":"PASS","expected_gate":"REJECTED","expected_reason":"PROFILE_MISMATCH"},
+    {"id":"mutated-context","planner":"mutate-context","fact":false,"fault":"none","expected_decision":"FAIL","expected_gate":"REJECTED","expected_reason":"FACT_RECEIPT_MISMATCH"},
+    {"id":"mint-fact-attempt","planner":"tool-request","fact":true,"fault":"none","expected_decision":"PASS","expected_gate":"REJECTED","expected_reason":"UNAUTHORIZED_ACTION"},
+    {"id":"self-certified","planner":"self-certify","fact":true,"fault":"none","expected_decision":"PASS","expected_gate":"REJECTED","expected_reason":"INVALID_FACT_SCHEMA"},
+    {"id":"fabricated-source-check","planner":"fake-e2","fact":true,"fault":"none","expected_decision":"PASS","expected_gate":"REJECTED","expected_reason":"INVALID_FINAL_SCHEMA"},
+    {"id":"source-changed","planner":"honest","fact":true,"fault":"change-source","expected_decision":"UNKNOWN","expected_gate":"REVIEW_REQUIRED","expected_reason":"SOURCE_NOT_CHECKED"},
+    {"id":"malformed-proposal","planner":"malformed","fact":true,"fault":"none","expected_decision":"PASS","expected_gate":"REJECTED","expected_reason":"INVALID_ACTION_SCHEMA"},
+    {"id":"planner-error","planner":"error","fact":true,"fault":"none","expected_decision":"PASS","expected_gate":"REJECTED","expected_reason":"PLANNER_ERROR"}
+  ]
+}

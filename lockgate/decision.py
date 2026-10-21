@@ -110,7 +110,8 @@ class FixtureFactRegistry:
 
 def evaluate_conditions(policy: DecisionPolicy, claims_policy: ClaimsPolicy,
                         manifest_path: str | Path, proposal: dict,
-                        registry: FixtureFactRegistry, trace: TraceStore) -> dict:
+                        registry: FixtureFactRegistry, trace: TraceStore,
+                        *, allow_synthetic_replay: bool = False) -> dict:
     """Recompute source checks and decide a conjunction of explicit boolean rules.
 
     FAIL dominates UNKNOWN for a conjunction of independently supported rules.
@@ -135,13 +136,16 @@ def evaluate_conditions(policy: DecisionPolicy, claims_policy: ClaimsPolicy,
     source_error = None
     try:
         # Never accept a model's or caller's saved "CHECKED" JSON as authority.
-        source = check_snapshot(manifest_path, claims_policy)
+        source = check_snapshot(manifest_path, claims_policy,
+                                allow_synthetic_replay=allow_synthetic_replay)
         if source['status'] != 'CHECKED':
             source_error = 'SOURCE_CLAIMS_NOT_CHECKED'
     except (ValueError, OSError, TypeError) as exc:
         source_error = 'SOURCE_RECHECK_FAILED:' + type(exc).__name__
     trace.event('SOURCE_RECHECK', {
         'checked': source_error is None,
+        'proof_level': source['proof_level'] if source else 'NOT_CHECKED',
+        'source_origin': source['source_origin'] if source else 'NOT_CHECKED',
         'source_sha256': source['source_sha256'] if source else None,
         'error': source_error,
     })
@@ -178,6 +182,7 @@ def evaluate_conditions(policy: DecisionPolicy, claims_policy: ClaimsPolicy,
         'decision': decision, 'scope': policy.scope,
         'profile_proof_level': 'SYNTHETIC_FIXTURE',
         'source_proof_level': source['proof_level'] if source else 'NOT_CHECKED',
+        'source_origin': source['source_origin'] if source else 'NOT_CHECKED',
         'source_url': claims_policy.source_url,
         'source_sha256': source['source_sha256'] if source else None,
         'source_fetched_at': source['source_fetched_at'] if source else None,

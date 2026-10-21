@@ -145,6 +145,49 @@ and downloadable CI artifacts.
 
 See `ROADMAP.md` for the implementation boundary and next task.
 
+## H4: proposal-only planner and offline replay
+
+```bash
+python -m lockgate.replay_cli
+```
+
+The planner gets a separate copy of bounded observations and can submit one
+JSON `final` proposal. It receives no tool capabilities, registry handle, file
+paths, or database handle. The host independently computes the decision from
+its own task facts after planning, then checks the proposal's profile, fact
+receipts, and claimed decision. Dropping an adverse fact cannot change that
+host decision. Requests to mint receipts or call tools are rejected.
+
+The offline matrix exercises 15 scenarios: honest PASS/FAIL/UNKNOWN, unsupported
+PASS, withheld evidence, forged receipts, changed values, wrong profiles,
+mutated observations, unauthorized tools, self-certification, fabricated source
+checks, source changes, malformed output, and planner exceptions. Its expected
+result is two accepted scoped reports, eleven rejected proposals, and two
+review outcomes. Acceptance of a faithful FAIL report does not approve an
+applicant. UNKNOWN requires review.
+
+Every replay preserves scenario/provider/model identifiers, refusal reasons,
+independent outcomes, policy/source hashes, and SQLite events. The provider is
+`offline-fixture` and the model identifier is `seeded-python-v1`: these are local
+test doubles, not a measured API model. No API inference or external tool call
+is used by this matrix. CI uploads the `lockgate-offline-replay` artifact.
+
+Replay source manifests are explicitly `E0_SYNTHETIC_REPLAY` and successful
+text checks stay `E0_SYNTHETIC_TEXT_MATCH`. Trusted replay code must enable that
+mode explicitly; normal source verification rejects such manifests. Synthetic
+source checks never become live E1/E2 evidence. Python adapters remain trusted
+code and are not isolated or independently timed out by this boundary. Proposal
+responses are limited to 16 KiB of JSON and a single call.
+
+To exercise the same planner gate with a live H1 snapshot and synthetic profiles:
+
+```bash
+python -m lockgate.decision_cli --retrieval-summary retrieval-summary.json --planner-mode seeded-honest
+```
+
+CI runs that path too. Both paths retain `full_eligibility: NOT_ASSESSED` and
+an empty `authorized_actions` list.
+
 **E1_RETRIEVED_ONLY means the page was fetched.** Its contents are untrusted
 data, and this stage makes no eligibility, deadline, availability, or applicant
 claim. It is separate from the H0 planner and cannot authorize new tools.

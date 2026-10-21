@@ -12,7 +12,9 @@ ROOT = Path(__file__).resolve().parent.parent
 
 def run_fixture_matrix(summary_path: str | Path, policy_path: str | Path,
                        claims_path: str | Path, fixtures_path: str | Path,
-                       db_path: str | Path) -> dict:
+                       db_path: str | Path, *, planner_mode: str = 'none') -> dict:
+    if planner_mode not in ('none', 'seeded-honest'):
+        raise ValueError('Unregistered fixture planner mode')
     policy = DecisionPolicy.from_file(policy_path)
     claims = ClaimsPolicy.from_file(claims_path)
     summary = json.loads(Path(summary_path).read_text(encoding='utf-8'))
@@ -43,15 +45,29 @@ def run_fixture_matrix(summary_path: str | Path, policy_path: str | Path,
             for key, value in profile['facts'].items():
                 rid = registry.mint(profile['profile_id'], key, value)
                 facts[key] = {'value': value, 'evidence_id': rid}
-            report = evaluate_conditions(policy, claims, summary['manifest_path'],
-                        {'profile_id': profile['profile_id'], 'facts': facts}, registry, trace)
+            task = {'profile_id': profile['profile_id'], 'facts': facts}
+            if planner_mode == 'seeded-honest':
+                from .planner_gate import run_planner_gate
+                from .replay import SeededPlanner
+                checked = run_planner_gate(policy, claims, summary['manifest_path'],
+                    task, registry, trace, SeededPlanner('honest'),
+                    provider_id='offline-fixture', model_id='seeded-python-v1', planner_id='honest')
+                report = dict(checked['verified_decision'])
+                report['planner_gate'] = {k: v for k, v in checked.items() if k != 'verified_decision'}
+            else:
+                report = evaluate_conditions(policy, claims, summary['manifest_path'],
+                                              task, registry, trace)
             report['expected_decision'] = profile['expected_decision']
             cases.append(report)
         finally:
             trace.close()
     passed = all(c['decision'] == c['expected_decision']
                  and c['source_proof_level'] == 'E2_SOURCE_TEXT_MATCH' for c in cases)
+    if planner_mode == 'seeded-honest':
+        passed = passed and all(c['planner_gate']['proposal_gate'] ==
+                    ('REVIEW_REQUIRED' if c['decision'] == 'UNKNOWN' else 'ACCEPTED') for c in cases)
     return {'status': 'DEMO_PASSED' if passed else 'DEMO_FAILED',
+            'planner_mode': planner_mode,
             'profile_proof_level': 'SYNTHETIC_FIXTURE',
             'full_eligibility': 'NOT_ASSESSED', 'authorized_actions': [], 'cases': cases}
 
@@ -63,10 +79,11 @@ def main() -> int:
     parser.add_argument('--claims', default=str(ROOT / 'contracts/claims.json'))
     parser.add_argument('--fixtures', default=str(ROOT / 'fixtures/profiles.json'))
     parser.add_argument('--db', default='runtime/decisions.sqlite3')
+    parser.add_argument('--planner-mode', choices=('none', 'seeded-honest'), default='none')
     args = parser.parse_args()
     try:
         report = run_fixture_matrix(args.retrieval_summary, args.policy, args.claims,
-                                    args.fixtures, args.db)
+                                    args.fixtures, args.db, planner_mode=args.planner_mode)
     except (ValueError, OSError, TypeError) as exc:
         print(json.dumps({'status': 'HALTED', 'error_type': type(exc).__name__}))
         return 2

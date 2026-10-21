@@ -114,12 +114,14 @@ def _occurrences(text: str, quote: str) -> list[dict]:
 
 
 def check_snapshot(manifest_path: str | Path, policy: ClaimsPolicy,
-                   *, now: datetime | None = None) -> dict:
+                   *, now: datetime | None = None,
+                   allow_synthetic_replay: bool = False) -> dict:
     """Check trusted quotes against visible text of a fresh, hashed E1 page."""
     path = Path(manifest_path)
     record = json.loads(path.read_text(encoding='utf-8'))
     if not isinstance(record, dict):
         raise VerificationDenied('INVALID_E1_MANIFEST')
+    synthetic = record.get('proof_level') == 'E0_SYNTHETIC_REPLAY'
     digest = record.get('sha256')
     if not isinstance(digest, str) or not re.fullmatch('[0-9a-f]{64}', digest):
         raise VerificationDenied('INVALID_SNAPSHOT_HASH')
@@ -131,7 +133,8 @@ def check_snapshot(manifest_path: str | Path, policy: ClaimsPolicy,
             or content_type.split(';', 1)[0].strip().lower()
                not in ('text/html', 'text/plain')):
         raise VerificationDenied('INVALID_E1_MANIFEST')
-    if (record.get('proof_level') != 'E1_RETRIEVED_ONLY'
+    if ((record.get('proof_level') != 'E1_RETRIEVED_ONLY'
+         and not (synthetic and allow_synthetic_replay))
             or record.get('status') != 200
             or record.get('final_url') != policy.source_url
             or Path(snapshot_path).name != snapshot.name):
@@ -180,7 +183,10 @@ def check_snapshot(manifest_path: str | Path, policy: ClaimsPolicy,
     text_path.write_text(visible, encoding='utf-8')
     report = {
         'status': 'CHECKED' if checked else 'REVIEW_REQUIRED',
-        'proof_level': 'E2_SOURCE_TEXT_MATCH' if checked else 'E1_RETRIEVED_ONLY',
+        'proof_level': (('E0_SYNTHETIC_TEXT_MATCH' if checked else 'E0_SYNTHETIC_REPLAY')
+                        if synthetic else
+                        ('E2_SOURCE_TEXT_MATCH' if checked else 'E1_RETRIEVED_ONLY')),
+        'source_origin': 'SYNTHETIC_REPLAY' if synthetic else 'LIVE_RETRIEVAL',
         'source_url': policy.source_url,
         'source_sha256': digest,
         'visible_text_sha256': visible_hash,
@@ -188,7 +194,7 @@ def check_snapshot(manifest_path: str | Path, policy: ClaimsPolicy,
         'source_fetched_at': record['fetched_at'],
         'claims': outcomes,
     }
-    report_path = path.parent / (digest + '.e2.json')
+    report_path = path.parent / (digest + ('.text-check.json' if synthetic else '.e2.json'))
     report_path.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     report['report_path'] = str(report_path)
     return report
