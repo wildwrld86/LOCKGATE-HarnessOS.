@@ -17,7 +17,7 @@ Never commit secrets or private traces. Policy changes need human review.
   claims against a fresh E1 snapshot; report unknown and contradiction states,
   retain text citation offsets and hashes, and deny E2 completion otherwise.
   Scope: verifier, trusted claim contract, tests, CI, and documentation.
-- H3-001 — ChatGPT — implemented; live CI pending: add a generic three-valued decision gate with
+- H3-001 — ChatGPT — completed: add a generic three-valued decision gate with
   source checks recomputed from E1, host-issued fact receipts, synthetic profiles,
   scoped outcomes, and a SQLite decision trace. Join these in a bounded CLI/CI run.
   Scope: decision module, fixtures/contracts, tests, workflow and docs.
@@ -71,8 +71,10 @@ Never commit secrets or private traces. Policy changes need human review.
   expected. Source checks are recomputed instead of trusting saved E2 JSON.
   Fact receipts are scoped to run/profile/key/value/age. Decision outputs retain
   source citations, policy hashes, explicit synthetic provenance, no authorized
-  actions, and `full_eligibility: NOT_ASSESSED`. Fresh CI must confirm the
-  retrieval-to-decision chain. See `ROADMAP.md` for the broad assessment.
+  actions, and `full_eligibility: NOT_ASSESSED`. GitHub Actions run 39535635215
+  passed both jobs. Downloaded artifact verified: source/visible-text hashes,
+  citations, run-bound fact receipts, all three outcomes and SQLite finish
+  events matched. See `ROADMAP.md` for the broad assessment.
 - Next unclaimed task H4-001: proposal-only planner adapter and an offline
   replay matrix using the same condition gate. Prefer this integration and
   adversarial evaluation before expanding credit-specific features.
