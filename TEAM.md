@@ -25,7 +25,7 @@ Never commit secrets or private traces. Policy changes need human review.
   host decision, offline adversarial replay matrix, refusal/provider records,
   and CI artifacts. Synthetic source replays must stay explicitly at E0.
   Scope: planner/replay modules, fixture contracts, tests, workflow and docs.
-- H5-001 — ChatGPT — implemented; CI pending: optional bounded Groq proposal adapter, an explicit
+- H5-001 — ChatGPT — completed; provider validation pending: optional bounded Groq proposal adapter, an explicit
   remote CLI path, sanitized usage/latency records, mocked protocol tests and
   subprocess timeout checks. No credentials are configured in this workspace.
   Scope: provider/worker/budget modules, CLI, tests, contracts, CI and docs.
@@ -103,7 +103,11 @@ Never commit secrets or private traces. Policy changes need human review.
   NOT_CONFIGURED without dispatch. Removed the old H0 unbounded Groq mode.
   Added a manual-only GitHub job scoped to its private Groq secret. Usage/cost
   remain unknown when unavailable; no dollar cap or provider-side cancellation
-  is claimed. No credentialed model evaluation has run. CI verification pending.
+  is claimed. No credentialed model evaluation has run. GitHub Actions run
+  39543384676 passed all 49 tests, offline replay and live evidence-chain jobs;
+  the optional credentialed job was correctly skipped on push. Readback confirmed
+  all 15 published files match the tested local bytes. Private-secret setup and
+  the explicit manual evaluation are documented in `MODEL_EVALUATION.md`.
 - Next validation H6-001: configure the private Groq Actions secret and run one
   explicit `demo-new` evaluation. Inspect the actual model outcome before adding
   routing or further architecture. Instructions: `MODEL_EVALUATION.md`.
