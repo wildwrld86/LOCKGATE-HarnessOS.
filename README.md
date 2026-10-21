@@ -7,7 +7,7 @@ Designed as a first, cloud-first building block for LEVERAGE//SEEKER, SI COLONY,
 ## What works now
 
 - Explicit JSON contract: tool allowlist, output acceptance fields, bounded step budget, repeated-action stop rule, short-lived evidence requirements.
-- Intent proposals from a deterministic demo planner **or** an optional Groq model; neither directly executes tools.
+- Intent proposals from deterministic demo planners, with a separate bounded Groq adapter for the H4 condition gate; planners receive no execution authority.
 - Read-only tools over synthetic local fixture data; Python policy checks every tool call.
 - Evidence receipts are minted only by successful read tool execution and bound to the current run.
 - Deterministic output verifier: matching fields must agree with **one** witnessed source record; forged receipts fail.
@@ -25,15 +25,15 @@ python -m lockgate.cli --mode skip-proof # exits 2 by design
 python -m lockgate.cli --mode loop       # exits 2 by design
 ```
 
-Optional Groq API integration:
+Optional Groq evaluation (one proposal using synthetic source/profile data):
 
 ```bash
-export GROQ_API_KEY='your-private-key'
-export GROQ_MODEL='a-current-model-id-your-account-supports'
-python -m lockgate.cli --mode groq
+python -m lockgate.model_cli --provider groq --model openai/gpt-oss-20b
 ```
 
-Never commit secrets. In GitHub Actions use repository secrets for protected values if you later add an authenticated run.
+Set `GROQ_API_KEY` privately in the environment first. The cloud workflow uses a
+repository secret and an explicit manual Groq selection. See `MODEL_EVALUATION.md`.
+The legacy H0 `--mode groq` path has been removed; H0 is an offline demonstration.
 
 ## Test matrix
 
@@ -53,7 +53,8 @@ Every push and pull request runs `.github/workflows/verify.yml` using Python 3.1
 Open **Actions → Lockgate contract and regression checks** to see the tests
 and the demo run. A successful run includes a **lockgate-demo-trace** artifact
 containing the JSON summary and SQLite audit log, retained for seven days.
-No API key is required. Groq inference is optional and is not exercised by CI.
+No API key is required for push/PR checks. Groq inference runs only when explicitly
+selected through the manual workflow; regular CI uses mocked provider responses.
 Read `TEAM.md` before contributing.
 
 ## H1: one official-page snapshot
@@ -187,6 +188,25 @@ python -m lockgate.decision_cli --retrieval-summary retrieval-summary.json --pla
 
 CI runs that path too. Both paths retain `full_eligibility: NOT_ASSESSED` and
 an empty `authorized_actions` list.
+
+## H5: optional bounded model evaluation
+
+`python -m lockgate.model_cli` defaults to offline replay. Its explicit
+`--provider groq` path sends one proposal request to a fixed HTTPS endpoint with
+the trusted model allowlist and budget in `contracts/model.json`. A dedicated
+worker process has a parent-enforced deadline, one reserved attempt, provider
+completion-token cap, request/response byte limits, and independent JSON/output
+checks. Requests have no tools, redirects, proxies, or automatic retries.
+
+The existing H4 gate independently decides the outcome. Reports retain actual
+provider/model IDs, latency, reported usage when available, the budget hash, and
+safe failure codes. Cost remains unknown (`null`); local timeout cannot cancel
+provider-side work or establish a dollar spending cap. All applicant/source
+data in this first remote evaluation is synthetic and stays E0.
+
+The adapter is validated with mocked responses and an actual stalled-process
+kill test. A credentialed provider run has not yet been performed. The cloud
+steps and exact limits are in `MODEL_EVALUATION.md`.
 
 **E1_RETRIEVED_ONLY means the page was fetched.** Its contents are untrusted
 data, and this stage makes no eligibility, deadline, availability, or applicant

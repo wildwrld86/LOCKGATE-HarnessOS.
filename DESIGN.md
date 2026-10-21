@@ -66,6 +66,15 @@ is not permission to act. Offline seeded replays explicitly stay at E0; trusted
 host replay mode must be enabled to consume synthetic source manifests, and
 normal source verification rejects them. Adapter Python code remains trusted.
 
+H5 adds an opt-in Groq adapter behind that gate. A fixed, no-redirect/no-proxy
+HTTP worker runs for one reserved attempt under a parent process deadline.
+Provider completion-token limits, byte limits and local response validation
+bound the proposal. Metadata records known usage and latency; unknown usage
+and dollar cost are not converted to zero. Killing the local worker cannot
+cancel provider-side work or enforce a dollar invoice limit. Default and CI
+test paths remain offline; the optional remote job requires manual selection
+and a private repository secret. No E3 action authority is introduced.
+
 ## Proposed Leverage Seeker task contract (v1)
 
 ```json

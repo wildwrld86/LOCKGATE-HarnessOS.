@@ -3,6 +3,29 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      evaluation_provider:
+        description: Offline checks, or one optional Groq proposal
+        type: choice
+        options:
+          - offline
+          - groq
+        default: offline
+      groq_model:
+        description: Model allowed by contracts/model.json
+        type: choice
+        options:
+          - openai/gpt-oss-20b
+          - llama-3.1-8b-instant
+        default: openai/gpt-oss-20b
+      profile_case:
+        description: Synthetic profile for the single remote proposal
+        type: choice
+        options:
+          - demo-new
+          - demo-returning
+          - demo-unknown
+        default: demo-new
 
 permissions:
   contents: read
@@ -40,6 +63,33 @@ jobs:
           path: |
             runtime-summary.json
             runtime/traces.sqlite3
+          if-no-files-found: ignore
+          retention-days: 7
+
+  groq-evaluation:
+    name: Optional bounded Groq evaluation
+    if: github.event_name == 'workflow_dispatch' && inputs.evaluation_provider == 'groq'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Request one bounded proposal on synthetic evidence
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_MODEL: ${{ inputs.groq_model }}
+          LOCKGATE_PROFILE: ${{ inputs.profile_case }}
+        run: python -m lockgate.model_cli --provider groq --case "$LOCKGATE_PROFILE" --output-dir runtime/remote-model > model-summary.json
+      - name: Upload sanitized model outcome and trace
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lockgate-optional-model-evaluation
+          path: |
+            model-summary.json
+            runtime/remote-model/
           if-no-files-found: ignore
           retention-days: 7
 

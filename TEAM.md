@@ -25,6 +25,10 @@ Never commit secrets or private traces. Policy changes need human review.
   host decision, offline adversarial replay matrix, refusal/provider records,
   and CI artifacts. Synthetic source replays must stay explicitly at E0.
   Scope: planner/replay modules, fixture contracts, tests, workflow and docs.
+- H5-001 — ChatGPT — implemented; CI pending: optional bounded Groq proposal adapter, an explicit
+  remote CLI path, sanitized usage/latency records, mocked protocol tests and
+  subprocess timeout checks. No credentials are configured in this workspace.
+  Scope: provider/worker/budget modules, CLI, tests, contracts, CI and docs.
 
 ## Notes
 
@@ -91,6 +95,15 @@ Never commit secrets or private traces. Policy changes need human review.
   outcomes matched, the attempted mint action issued no receipt, synthetic
   proof stayed at E0, and the honest planner on live E2 source evidence returned
   PASS/FAIL/UNKNOWN with accepted/accepted/review gates respectively.
-- Next unclaimed H5-001: optional real-model proposer with enforced resource
-  budgets and the same gate/trace protocol. Offline mode remains the default;
-  configure private credentials before any remote evaluation.
+- H5 handoff: Forty-nine local tests pass, including mocked protocol errors,
+  truncation/tool/size failures, single-attempt accounting, secret-safe telemetry,
+  and actual termination of a stalled subprocess. `model_cli` defaults to offline
+  replay; explicit Groq mode reserves one attempt under a 20-second worker
+  deadline and 1,024 requested completion tokens. Missing credentials cause
+  NOT_CONFIGURED without dispatch. Removed the old H0 unbounded Groq mode.
+  Added a manual-only GitHub job scoped to its private Groq secret. Usage/cost
+  remain unknown when unavailable; no dollar cap or provider-side cancellation
+  is claimed. No credentialed model evaluation has run. CI verification pending.
+- Next validation H6-001: configure the private Groq Actions secret and run one
+  explicit `demo-new` evaluation. Inspect the actual model outcome before adding
+  routing or further architecture. Instructions: `MODEL_EVALUATION.md`.

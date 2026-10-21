@@ -16,7 +16,8 @@ Use Python standard-library tools and cloud CI without inference costs first.
 | H2 source text check | Trusted exact quotes, configured contradictions, freshness and citations; E2 text support only |
 | H3 condition decision | Recomputed source checks + host-issued synthetic fact receipts + PASS/FAIL/UNKNOWN + common trace store |
 | H4 planner proposal gate | One bounded JSON proposal, host-owned independent outcome, no tool capabilities; 15 offline seeded scenarios and honest planner on live evidence |
-| Model routing | Optional Groq H0 adapter only; no validated routing policy |
+| H5 bounded provider | Optional Groq adapter with one attempt, parent worker deadline, token/byte limits and safe telemetry; credentialed API validation pending |
+| Model routing | No routing policy or measured model comparisons yet |
 | Durable memory | SQLite event history; no learned factual memory or managed multiworker database |
 | Authorization | No external-write authority; no E3 approval mechanism |
 | Evolver | Regression cases are written by the human-authorized builder; no automated policy changes |
@@ -35,14 +36,22 @@ identifiers. Its source fixtures remain E0; only the separate live retrieval
 path can produce E1/E2. These results describe seeded checks, not real model
 accuracy, a hardened security sandbox, or a general defense against injection.
 
-## Next bounded task: H5-001
+## H5 validation boundary
 
-Add one optional real-model proposal adapter with enforced call, request-time,
-and output budgets. Keep offline replay as the default. Run the same host gate
-and retain provider/model, latency, usage when available, and decision/refusal
-records. Remote evaluation requires configured credentials; synthetic tests
-must remain runnable without secrets or API spend. Do not describe seeded
-results as model performance or build model routing before measured runs exist.
+The Groq adapter has mocked protocol coverage and an actual stalled-process
+kill test. It uses an explicit manual cloud path and the same independent gate.
+Source/applicant evidence in the first remote evaluation remains synthetic E0.
+No real-model result has been validated yet, and no dollar spending cap is
+claimed. The older unbounded H0 remote mode has been removed.
+
+## Next concrete validation: H6-001
+
+Configure the private Groq Actions secret and manually evaluate one `demo-new`
+proposal. Inspect provider status, usage, latency, refusal reasons and host
+outcome. If the provider call fails, turn that specific failure into a bounded
+regression or transport fix. Repeat with the returning/unknown synthetic cases
+only after inspecting the first run. Use actual evidence to select the next
+build step; defer routing and additional architecture until measured runs exist.
 
 Keep the resulting protocol portable before expanding provider coverage,
 building a dashboard, or granting external-write authority.

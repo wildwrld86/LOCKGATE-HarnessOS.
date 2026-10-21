@@ -1,0 +1,8 @@
+{
+  "allowed_models": ["openai/gpt-oss-20b", "llama-3.1-8b-instant"],
+  "max_calls": 1,
+  "wall_time_seconds": 20,
+  "max_completion_tokens": 1024,
+  "max_request_bytes": 32768,
+  "max_response_bytes": 65536
+}

@@ -3,12 +3,11 @@ import argparse
 import json
 from pathlib import Path
 from .core import Contract, FixtureTools, Harness, TraceStore
-from .providers import DemoPlanner, WrongToolPlanner, SkipProofPlanner, LooperPlanner, GroqPlanner
+from .providers import DemoPlanner, WrongToolPlanner, SkipProofPlanner, LooperPlanner
 
 ROOT = Path(__file__).resolve().parent.parent
 PROVIDERS = {"demo": DemoPlanner, "wrong-tool": WrongToolPlanner,
-             "skip-proof": SkipProofPlanner, "loop": LooperPlanner,
-             "groq": GroqPlanner}
+             "skip-proof": SkipProofPlanner, "loop": LooperPlanner}
 
 
 def main() -> int:

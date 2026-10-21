@@ -14,6 +14,7 @@ from typing import Callable
 from .core import Planner, TraceStore
 from .decision import DecisionPolicy, FixtureFactRegistry, evaluate_conditions, _identifier
 from .verification import ClaimsPolicy, check_snapshot
+from .model_budget import model_identifier
 
 MAX_PROPOSAL_BYTES = 16384
 
@@ -24,7 +25,7 @@ def run_planner_gate(policy: DecisionPolicy, claims: ClaimsPolicy,
                      planner: Planner, *, provider_id: str, model_id: str,
                      planner_id: str, allow_synthetic_replay: bool = False,
                      before_decision: Callable[[], None] | None = None) -> dict:
-    if not all(_identifier(x) for x in (provider_id, model_id, planner_id)):
+    if not all(_identifier(x) for x in (provider_id, planner_id)) or not model_identifier(model_id):
         raise ValueError('Invalid host planner identity')
     canonical_task = deepcopy(task)
     precheck = {'status': 'NOT_CHECKED'}
