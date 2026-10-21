@@ -21,7 +21,7 @@ Never commit secrets or private traces. Policy changes need human review.
   source checks recomputed from E1, host-issued fact receipts, synthetic profiles,
   scoped outcomes, and a SQLite decision trace. Join these in a bounded CLI/CI run.
   Scope: decision module, fixtures/contracts, tests, workflow and docs.
-- H4-001 — ChatGPT — implemented; CI pending: bounded proposal-only planner adapter, independent
+- H4-001 — ChatGPT — completed: bounded proposal-only planner adapter, independent
   host decision, offline adversarial replay matrix, refusal/provider records,
   and CI artifacts. Synthetic source replays must stay explicitly at E0.
   Scope: planner/replay modules, fixture contracts, tests, workflow and docs.
@@ -86,7 +86,11 @@ Never commit secrets or private traces. Policy changes need human review.
   locally against the prior artifact. Replay sources stay explicitly at E0;
   normal source verification rejects synthetic manifests unless trusted host
   replay mode is enabled. No real model inference, paid API, or action authority
-  is part of H4. Fresh CI and artifact verification are pending.
+  is part of H4. GitHub Actions run 39536999575 passed both jobs. Downloaded
+  replay and live-chain artifacts verified: all refusal reasons and SQLite
+  outcomes matched, the attempted mint action issued no receipt, synthetic
+  proof stayed at E0, and the honest planner on live E2 source evidence returned
+  PASS/FAIL/UNKNOWN with accepted/accepted/review gates respectively.
 - Next unclaimed H5-001: optional real-model proposer with enforced resource
   budgets and the same gate/trace protocol. Offline mode remains the default;
   configure private credentials before any remote evaluation.
