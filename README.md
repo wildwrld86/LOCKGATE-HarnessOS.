@@ -76,7 +76,7 @@ the allowed hostname although the connection uses a vetted resolved address.
 The response bytes are stored under `runtime/snapshots/` with SHA-256 naming and
 a separate JSON manifest containing the final URL, redirect chain, resolved IP,
 timestamp, response type, and hash. CI attempts one read-only live retrieval on
-push and publishes the `lockgate-e1-retrieval` artifact. The deterministic tests
+push and publishes the `lockgate-evidence-chain` artifact. The deterministic tests
 do not depend on that external page.
 The response cap is 2 MiB; larger pages are rejected rather than truncated.
 
@@ -106,6 +106,44 @@ remain unchanged, or validate an arbitrary model-written paraphrase. An
 untrusted planner cannot edit the host claim contract or promote E1 to E2;
 the H0 synthetic demo remains a separate E0 workflow. The report and hashes
 are an audit trail, not a cryptographic signature against a compromised host.
+
+## H3: scoped decisions with witnessed facts
+
+```bash
+python -m lockgate.decision_cli --retrieval-summary retrieval-summary.json
+```
+
+This bounded host command joins the existing source verifier, host-issued fact
+receipts, a generic boolean condition gate, and SQLite tracing. It rechecks E1
+bytes and current E2 claims on every decision. A saved JSON report saying
+`CHECKED` is not accepted as proof. The trusted `contracts/decision.json` lists
+the required facts, expected values, scope, and source claim IDs. The planner's
+proposal may only reference receipts created by the host in that run.
+
+The included fixture matrix demonstrates:
+
+| Synthetic applicant fact | Condition result |
+|---|---|
+| Witnessed `is_new_customer: true` | PASS |
+| Witnessed `is_new_customer: false` | FAIL |
+| Missing, forged, expired, mismatched, or self-certified fact | UNKNOWN |
+
+A failed source check makes the decision UNKNOWN. For multiple checked rules,
+all must pass for PASS; a definite failed rule yields FAIL even if another fact
+is missing. Receipts are bound to the run, profile, fact key, value, and age.
+The demo command exits zero only when its expected PASS/FAIL/UNKNOWN matrix
+matches and its source checks passed. That exit status reports a successful
+test run; it grants no applicant approval or action permission.
+
+Every result retains source citations, source/policy hashes, a run ID, and a
+SQLite event trace. `profile_proof_level` is always `SYNTHETIC_FIXTURE`,
+`full_eligibility` is always `NOT_ASSESSED`, and `authorized_actions` is empty.
+H3 evaluates one configured condition, not the provider's full eligibility
+terms. Real applicant facts still need an independently trusted adapter and a
+defined verification procedure. Keep personal profiles out of public fixtures
+and downloadable CI artifacts.
+
+See `ROADMAP.md` for the implementation boundary and next task.
 
 **E1_RETRIEVED_ONLY means the page was fetched.** Its contents are untrusted
 data, and this stage makes no eligibility, deadline, availability, or applicant

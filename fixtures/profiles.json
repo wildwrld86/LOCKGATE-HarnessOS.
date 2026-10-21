@@ -1,0 +1,8 @@
+{
+  "source_type": "synthetic_fixture",
+  "profiles": [
+    {"profile_id": "demo-new", "facts": {"is_new_customer": true}, "expected_decision": "PASS"},
+    {"profile_id": "demo-returning", "facts": {"is_new_customer": false}, "expected_decision": "FAIL"},
+    {"profile_id": "demo-unknown", "facts": {}, "expected_decision": "UNKNOWN"}
+  ]
+}

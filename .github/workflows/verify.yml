@@ -32,6 +32,7 @@ jobs:
           retention-days: 7
 
   retrieve-official-page:
+    name: Source and condition evidence chain
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -44,14 +45,18 @@ jobs:
         run: python -m lockgate.retrieval_cli --output-dir runtime/snapshots > retrieval-summary.json
       - name: Check trusted claims against snapshot (E2 gate)
         run: python -m lockgate.verification_cli --retrieval-summary retrieval-summary.json > verification-summary.json
-      - name: Upload official-page snapshot, manifest, and E2 citations
+      - name: Exercise scoped PASS, FAIL and UNKNOWN decisions (synthetic profiles)
+        run: python -m lockgate.decision_cli --retrieval-summary retrieval-summary.json --db runtime/decisions.sqlite3 > runtime/decision-summary.json
+      - name: Upload source evidence, decisions and trace
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lockgate-e1-retrieval
+          name: lockgate-evidence-chain
           path: |
             retrieval-summary.json
             verification-summary.json
+            runtime/decision-summary.json
+            runtime/decisions.sqlite3
             runtime/snapshots/
           if-no-files-found: ignore
           retention-days: 7

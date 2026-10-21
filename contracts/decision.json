@@ -1,0 +1,13 @@
+{
+  "task_id": "AWS-NEW-CUSTOMER-CONDITION-DEMO",
+  "scope": "Only the stated new-customer condition; full credit eligibility is not assessed.",
+  "max_fact_age_seconds": 300,
+  "rules": [
+    {
+      "id": "new-customer-condition",
+      "fact_key": "is_new_customer",
+      "expected": true,
+      "source_claim_id": "aws-new-account-credit"
+    }
+  ]
+}

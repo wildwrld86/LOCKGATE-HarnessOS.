@@ -40,7 +40,7 @@ USER GOAL -> CONTRACT (trusted host configuration)
 
 ## Evidence maturity levels
 
-| Level | Definition | Available in H0? |
+| Level | Definition | Available now? |
 |---|---|---|
 | E0 synthetic | A fixture observed through an allowed tool and referenced by a valid receipt | Yes |
 | E1 retrieved | A live page fetched through controlled egress and snapshotted | Yes, trusted-host CLI; not wired into H0 output gate |
@@ -50,6 +50,13 @@ USER GOAL -> CONTRACT (trusted host configuration)
 Output gating should encode a task-specific minimum. H0 only demonstrates E0; it cannot support a production claim of eligibility or grant availability.
 The H2 CLI requires all configured text checks to pass for E2. It does not
 promote the H0 fixture output or make a claim about any applicant's eligibility.
+
+H3 adds a generic boolean condition decision using a trusted host contract and
+run-bound synthetic fact receipts. It recomputes H2 from E1 for every decision,
+uses the existing SQLite trace store, and explicitly returns PASS, FAIL, or
+UNKNOWN. All H3 results retain `full_eligibility: NOT_ASSESSED` and grant no
+action authority. H3 is a milestone name and does not imply E3 authorization.
+The current build direction and deferred capabilities are in `ROADMAP.md`.
 
 ## Proposed Leverage Seeker task contract (v1)
 

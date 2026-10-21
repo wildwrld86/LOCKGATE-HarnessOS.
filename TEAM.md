@@ -17,6 +17,10 @@ Never commit secrets or private traces. Policy changes need human review.
   claims against a fresh E1 snapshot; report unknown and contradiction states,
   retain text citation offsets and hashes, and deny E2 completion otherwise.
   Scope: verifier, trusted claim contract, tests, CI, and documentation.
+- H3-001 — ChatGPT — implemented; live CI pending: add a generic three-valued decision gate with
+  source checks recomputed from E1, host-issued fact receipts, synthetic profiles,
+  scoped outcomes, and a SQLite decision trace. Join these in a bounded CLI/CI run.
+  Scope: decision module, fixtures/contracts, tests, workflow and docs.
 
 ## Notes
 
@@ -57,6 +61,18 @@ Never commit secrets or private traces. Policy changes need human review.
   hashes were independently recomputed against the saved visible text and
   source snapshot (SHA-256 `779c708ffc32f201ed24aa1fa0e2b1cd2c89f95e745fbe1515451039d6b61fc1`).
   This is exact text support only, not semantic or applicant verification.
-- Next unclaimed task H3-001: define a narrow applicant profile and independent
-  eligibility decision protocol with an explicit `unknown` outcome. Do not
-  infer personal eligibility from text matches alone or grant write authority.
+- Direction review: LOCKGATE remains a reusable execution/accountability layer.
+  Credit programs are the proving case. H3 checks one stated condition using
+  synthetic applicant facts; a passing condition cannot become a full program
+  eligibility claim. Routing, approvals, Evolver, and real identity evidence
+  remain future work. Reuse the source verifier and trace store already present.
+- H3 handoff: Thirty local tests pass. The three-case fixture matrix also ran
+  against the prior AWS E1 artifact and returned PASS / FAIL / UNKNOWN as
+  expected. Source checks are recomputed instead of trusting saved E2 JSON.
+  Fact receipts are scoped to run/profile/key/value/age. Decision outputs retain
+  source citations, policy hashes, explicit synthetic provenance, no authorized
+  actions, and `full_eligibility: NOT_ASSESSED`. Fresh CI must confirm the
+  retrieval-to-decision chain. See `ROADMAP.md` for the broad assessment.
+- Next unclaimed task H4-001: proposal-only planner adapter and an offline
+  replay matrix using the same condition gate. Prefer this integration and
+  adversarial evaluation before expanding credit-specific features.
